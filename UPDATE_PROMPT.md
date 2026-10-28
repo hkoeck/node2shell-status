@@ -46,6 +46,11 @@ You are maintaining `README.md` in this repository: a status overview of Node2Sh
 | Sophos advisories (page often 403) | `https://www.sophos.com/en-us/security-advisories/feed` (RSS) |
 | RPM spec of a third-party package | download the SRPM into an empty directory, `rpm2cpio … \| cpio -id`, read the `.spec` (do not build it) |
 | Zendesk help centers behind bot protection | `https://<host>/api/v2/help_center/en-us/articles/<id>.json` |
+| Microsoft (MSRC) | `https://api.msrc.microsoft.com/sug/v2.0/en-US/vulnerability?$filter=cveNumber eq '<CVE>'` and `…/affectedProduct?$filter=…` (fixed builds per product, incl. Azure Linux) |
+| BSI (DE) | `https://wid.cert-bund.de/.well-known/csaf/white/<year>/wid-sec-w-<year>-<n>.json` (CVE list, revision history); find `<n>` via the WID RSS feed |
+| Photon OS | `https://packages.vmware.com/photon/photon_cve_metadata/cve_data_photon<ver>.json` |
+| Cloudflare WAF changes | `https://developers.cloudflare.com/changelog/rss/index.xml` (the WAF changelog page renders without content for curl) |
+| Citrix support search | runs in an iframe (`support-search.citrix.com.pagescdn.com`, Yext API with a key set by the page): open `support.citrix.com/support-home/kbExternalSearch?query=<CVE>` in a browser and read the `…/search/query` JSON response or the iframe text, not the main page |
 | Leads for missing vendors and bundled copies | `https://broccoli2shell.com/`, oss-security list, the PHP2Shell sweep in `hkoeck/php2shell-status` (vendor list) — leads only |
 
 JavaScript-heavy portals (F5 MyF5, Citrix support, Ivanti hub, Juniper support portal, SonicWall PSIRT, HPE support) usually work in a headless browser: wait until the article text is visible, then read `document.body.innerText`.

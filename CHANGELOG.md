@@ -2,6 +2,33 @@
 
 Newest entry first.
 
+## Update 2 – 28 Oct 2026, 10:21 UTC
+
+Coverage widened. The README went from about 1,800 to about 2,900 words, with the same structure as the PHP2Shell page. Details: [VERIFICATION.md](VERIFICATION.md#update-2-checks-28-oct-2026).
+
+- **New sections:**
+  - WAF, IPS and detection content: Cloudflare, Fastly, Imperva, Vercel, F5, Check Point, Trend Micro TippingPoint, Tenable, Qualys.
+  - Cloud platforms and container images: Azure, AWS, Google Cloud, Vercel, Docker `node`, Red Hat images.
+  - Government / CERT: CISA, BSI, CSA Singapore, CERT-FR; checked with nothing found: CERT-EU, CCCS, NCSC-UK.
+  - "Checking whether you are patched", "Fork it" and "Sources".
+- **New appliance rows:**
+  - HPE alert (27 Oct, no products named yet) and Trend Micro (assessment ongoing, TippingPoint 48101).
+  - **Citrix, now checked:** the support search runs inside an iframe, so update 1 saw an empty page. The search API read in the browser finds no article for this CVE.
+  - "Checked, nothing found": Sophos, SonicWall, Juniper, Ivanti, WatchGuard, Barracuda, Nutanix, Splunk, A10, Siemens, Zscaler blog.
+  - "Could not check" row: Broadcom / VMware, NetApp, Akamai, Arista, Extreme, Infoblox, Forcepoint, Trellix, Netskope, Gigamon.
+- **Microsoft (MSRC):**
+  - Critical for .NET / Visual Studio, CVSS 8.1, exploited "No".
+  - .NET SDK versions; Visual Studio 2019 / 2022 / 2026 and PowerShell 7.4–7.6 fixed versions.
+  - Azure Linux 3.0 fixed.
+- **Distributions added:** Azure Linux 3.0, Photon OS 5, Alpine 3.22, CloudLinux / TuxCare (`alt-nodejs` bundles its own Brotli). CIQ Rocky 9.2 LTS is listed only as a Tenable lead.
+- **Exploitation:**
+  - CISA alert wording "based on evidence of active exploitation".
+  - BSI "Exploit aufgenommen" (27 Oct).
+  - Tenable: has not independently confirmed the ELLIO activity.
+  - Previdian honeypot hit, reported only by The Hacker News, marked not verified.
+- **Not verified, not used as fact:** a news report of a VMware SDDC Manager advisory for this CVE. Broadcom notification 38017, which search results linked to it, is an unrelated August advisory.
+- **Unchanged:** the 17 update-1 sources were re-read at 10:20 UTC and had no changes.
+
 ## Correction – 28 Oct 2026, 09:53 UTC
 
 - VERIFICATION.md: check-time ranges ending in 09:47 replaced by ranges between printed `date -u` anchors (no command printed 09:47).
