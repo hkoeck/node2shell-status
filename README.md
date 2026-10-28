@@ -3,13 +3,13 @@
 > [!WARNING]
 > **AI-generated content.** This document was researched and written by an AI assistant (Claude, Anthropic). Statements were checked against the raw text of the linked primary source (HTML/JSON, not summaries) **except where marked as not verified**; provenance is logged in [VERIFICATION.md](VERIFICATION.md). It may still contain errors and goes stale quickly. **Always verify against the vendor source before acting.** No warranty.
 
-**Status:** 28 October 2026, 09:46 UTC (update 1). Sources downloaded 09:36–09:46 UTC; browser-only pages (F5, Ivanti, Juniper) 09:42–09:46 UTC. Could not check: Akamai (HTTP 403), Sophos advisory page (403; RSS feed read instead), Citrix support search (did not render), Check Point support search (404). Per-source times: [VERIFICATION.md](VERIFICATION.md). Change history: [CHANGELOG.md](CHANGELOG.md).
+**Status:** 28 October 2026, 09:53 UTC (update 1). Sources downloaded 09:36–09:46 UTC; browser-only pages (F5, Ivanti, Juniper) 09:42–09:46 UTC. Could not check: Akamai (HTTP 403), Sophos advisory page (403; RSS feed read instead), Citrix support search (did not render), Check Point support search (404). Per-source times: [VERIFICATION.md](VERIFICATION.md). Change history: [CHANGELOG.md](CHANGELOG.md).
 
 ## Key facts
 
 - **The bug:** out-of-bounds write in the Google Brotli C decoder (`c/dec/decode.c`), CWE-787 / CWE-252. Node.js: "An invalid block switch was reported as a temporary need for more input instead of a permanent format error, so the streaming decoder kept appending input bytes to an eight-byte internal buffer." Impact: crash, memory disclosure or remote code execution in any process that decompresses attacker-controlled Brotli data.
 - **Affected / fixed:** Brotli 1.0.3 up to 1.2.0; fixed in **1.0.10, 1.1.1, 1.2.1** (released 21 Oct 2026). The upstream fix commit [0ed4268](https://github.com/google/brotli/commit/0ed4268) is dated 27 Feb 2026. Node.js fixed in **22.23.4, 24.22.1, 26.12.1** (21 Oct); end-of-life lines get no fix.
-- **Severity:** CNA (Google) CVSS 4.0 **9.2 Critical**; Node.js "high"; Red Hat, SUSE, Oracle, Amazon: Important / CVSS 3.1 8.1 (AC:H); Ubuntu priority Medium.
+- **Severity:** CNA (Google) CVSS 4.0 **9.2 Critical**; Node.js "high"; Red Hat, Oracle, Amazon: Important / CVSS 3.1 8.1 (AC:H); SUSE CVSS 3.1 8.1; Ubuntu priority Medium.
 - **Exploitation:**
   - **CISA KEV:** added 27 Oct 2026, due **10 Nov 2026** (BOD 26-04), forensic triage "No" (catalog 2026.10.27). CISA SSVC (ADP) in the CVE record: Exploitation `active` (23 Oct).
   - **In the wild:** [ELLIO](https://ellio.tech/en/blog/node2shell-cve-2026-111497-rce-on-stock-nodejs-builds/) (update 26 Oct): "ELLIO sensors have recorded CVE-2026-111497 exploit traffic in the wild, carrying the public exploit that we confirmed gets a shell on vulnerable builds."
@@ -60,7 +60,7 @@
 ## 4. How to check
 
 - **System library:** `rpm -q --changelog brotli | grep CVE-2026-111497` or the Debian / Ubuntu changelog; backports keep the old upstream version number.
-- **Node.js:** check `node --version` against the fixed releases. Do **not** rely on `process.versions.brotli`: ELLIO reports that "process.versions.brotli reports 1.2.0 on a patched build and on a vulnerable one".
+- **Node.js:** check `node --version` against the fixed releases. Do **not** rely on `process.versions.brotli`: ELLIO reports that "process.versions.brotli reports 1.2.0 on a patched build and on a vulnerable one" (the v24.22.1 source tree confirms it).
 - **Python:** `pip show Brotli brotlicffi` (wheels bundle the decoder).
 - **.NET:** `dotnet --list-runtimes`.
 - **After updating:** restart processes that loaded the old library (`needs-restarting -s`, `checkrestart`); rebuild and redeploy container images.
