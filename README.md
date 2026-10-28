@@ -3,7 +3,7 @@
 > [!WARNING]
 > **AI-generated content.** This document was researched and written by an AI assistant (Claude, Anthropic). Statements were checked against the raw text of the linked primary source (HTML/JSON/CSAF, not summaries) **except where marked as not verified**; provenance is logged in [VERIFICATION.md](VERIFICATION.md). It may still contain errors and goes stale quickly. **Always verify against the vendor source before acting.** No warranty.
 
-**Status:** 28 October 2026, 10:30 UTC (update 2). New in this update: 127 URLs fetched with curl (09:56–10:19 UTC), about 40 portal pages read in a browser (09:58–10:18 UTC), plus BSI / CERT-FR (10:21 UTC). Re-read 10:20–10:30 UTC: all 67 update-1 curl sources, the Rocky Apollo API, Sophos RSS, the SonicWall API and both F5 articles. Only wording or secondary-source changes were found. Not re-read in update 2: the Juniper and Ivanti portal searches (09:42–09:46 UTC). Could not check (bot protection, login, or the page did not render): Akamai, Broadcom / VMware portal, NetApp advisory list, Sophos advisory page (RSS read instead), Zscaler, Kaseya, Arista, Extreme, Infoblox, Forcepoint, Trellix, Netskope, Gigamon, the Check Point support KB search, community.citrix.com. Per-source times: [VERIFICATION.md](VERIFICATION.md). Change history: [CHANGELOG.md](CHANGELOG.md).
+**Status:** 28 October 2026, 14:18 UTC (update 3: section 2 "IPS / WAF protection" rebuilt and checked 14:12–14:18 UTC). Other sections unchanged since update 2 (10:30 UTC). In update 2: 127 URLs fetched with curl (09:56–10:19 UTC), about 40 portal pages read in a browser (09:58–10:18 UTC), and BSI / CERT-FR (10:21 UTC). Also re-read 10:20–10:30 UTC: all 67 update-1 curl sources, the Rocky Apollo API, Sophos RSS, the SonicWall API and both F5 articles; only wording or secondary-source changes were found. The Juniper and Ivanti portal searches date from 09:42–09:46 UTC. Could not check (bot protection, login, or the page did not render): Akamai, Broadcom / VMware portal, NetApp advisory list, Sophos advisory page (RSS read instead), Zscaler, Kaseya, Arista, Extreme, Infoblox, Forcepoint, Trellix, Netskope, Gigamon, Check Point support KB search, community.citrix.com, the FortiGuard IPS encyclopedia and PAN Threat Vault. Per-source times: [VERIFICATION.md](VERIFICATION.md). Change history: [CHANGELOG.md](CHANGELOG.md).
 
 ## Key facts
 
@@ -46,18 +46,48 @@
 | **Checked, nothing found** | **Sophos** (advisory RSS), **SonicWall** (PSIRT API, newest entry 14 Oct), **Juniper** (support portal search only; it can miss reference advisories), **Ivanti** (hub search: only customer questions about EPMM / Sentry and vADC, no Ivanti answer), **WatchGuard** (PSIRT, newest 27 Oct), **Barracuda** (trust center), **Nutanix** (advisories, newest #0059 of 27 Oct), **Splunk** (advisories, newest 22 Oct), **A10** (advisories), **Siemens** (ProductCERT CSAF feed, newest 27 Oct), **SolarWinds** (advisories), **Oracle** (security alerts, newest 26 Oct), **Elastic** (security announcements, newest 6 Oct; one unanswered customer question about Elasticsearch, 24 Oct). |
 | **Could not check** | Broadcom / VMware: the portal renders no list. A news report of an SDDC Manager advisory for this CVE is **not verified**. NetApp: the list did not render. Akamai: HTTP 403. Zscaler: the trust portal returns 404, and the research blog list does not show its PHP2Shell post either, so it cannot be used. Kaseya: the page shell has no advisory list. Arista, Extreme, Infoblox, Forcepoint, Trellix, Netskope, Gigamon: bot protection, error pages or login. |
 
-## 2. WAF, IPS and detection content
+## 2. IPS / WAF protection
 
-| Vendor | Content | Notes |
+**What a network IPS or WAF can do here:**
+- It sees **inbound request bodies** with `Content-Encoding: br` sent to your servers. This only works if TLS is terminated or decrypted in front of the application.
+- It does **not** protect the other main path: an application that fetches a Brotli response from an attacker's server (`fetch()`, Python clients, URL previews). Azure: it "can't protect applications that fetch and decompress Brotli-encoded responses from external servers". This needs the runtime / library update, or egress inspection with TLS decryption.
+- Most rules shipped so far are generic. They block or log every `Content-Encoding: br` request body, not just exploit patterns. Legitimate Brotli uploads are rare, but check your logs before blocking.
+- **Do not turn on Brotli decoding in the inspection device to "see" the payload.** On PAN-OS, exactly that setting (Brotli inspection) makes the firewall itself vulnerable (section 1).
+
+### Network IPS / next-generation firewalls
+
+| Vendor | Coverage | Status / notes |
 |---|---|---|
-| Cloudflare | Emergency release ([changelog](https://developers.cloudflare.com/changelog/post/2026-10-25-emergency-waf-release/), 25 Oct) adds two Managed Ruleset rules: "Brotli - Request Content-Encoding - CVE:CVE-2026-111497" and a Next.js rule for `/_next/image` | "enabled by default with their action set to Log". Cloudflare warns that blocking the Next.js rule "may prevent optimized images from loading" |
-| Fastly Next-Gen WAF | "Added virtual patch for CVE-2026-111497 (Node2Shell, HTTP2Shell)" ([changelog](https://www.fastly.com/documentation/reference/changes/), 26 Oct) | – |
-| Imperva | "Imperva has added WAF rules for CVE-2026-111497." ([blog](https://www.imperva.com/blog/node2shell-from-brotli-data-to-remote-code-execution/)) | – |
-| Vercel | WAF rules deployed "the same day that block the inbound attack vector for every project on Vercel" ([bulletin](https://vercel.com/kb/bulletin/node-js-security-advisory)) | "does not replace patching" |
-| F5 Advanced WAF | Custom attack signature (rule text in K000163902) | Blocks all `Content-Encoding: br` POST / PUT / PATCH |
-| Check Point | IPS **CPAI-2026-15802**, log "Web Server Enforcement Violation" | – |
-| Trend Micro | TippingPoint filter **48101** "HTTP: Google Brotli Decoder Out-of-Bounds Write Vulnerability"; Vision One detections for Node.js child processes and outbound connections | – |
-| **Scanners** | **Tenable:** 63 plugins ([list](https://www.tenable.com/cve/CVE-2026-111497/plugins)), e.g. 372406 / 372407 (Python Brotli / brotlicffi), 372462–372464 (.NET Core, SDK, ASP.NET Core OOB), plus distribution local checks. **Qualys** ([blog](https://blog.qualys.com/product-tech/2026/10/23/node-js-patches-brotli-remote-code-execution-flaw-find-vulnerable-runtimes-before-attackers-do)): QID **389117** (Node.js on Windows / macOS). The TotalAppSec check QID **533085** is intrusive: "This intrusive check may cause applications or APIs running on vulnerable Node.js versions to crash" | WAF rules cover inbound request bodies only. Fetched responses and file input need the runtime or library update |
+| **Palo Alto Networks** (Threat Prevention) | **None current.** On 26–27 Oct the advisory named Threat ID **97686** (content 9165+) as "partial coverage". That text carried conditions about routing traffic for the MGT port through a DP port. It was removed on 28 Oct 06:55 UTC: "Remove threat ID from workarounds and mitigations section." | Use the workaround (`set system setting brotli-encoding disable`) or the hotfixes. Threat Vault needs a login, so we could not check whether 97686 still exists |
+| **Cisco** (Snort / Secure Firewall, Talos) | **No rule found.** The Talos rule releases of 20, 21 (two) and 27 Oct add no Brotli / Node.js / CVE-2026-111497 rule. The Snort 3 community rules (26 Oct) have none. The Cisco advisory names no SIDs | Watch the next Talos rule release |
+| **Fortinet** (FortiGate IPS) | IPS signature **62703**, according to [Threat Signal 6556](https://www.fortiguard.com/threat-signal-report/6556/node-js-brotli-remote-code-execution-nodel2shell) (26 Oct): "FortiGuard Labs has available IPS signatures to detect and protect against attacks targeting CVE-2026-111497". Also AV / behavior detection and web filtering for follow-on payloads | The [encyclopedia entry](https://www.fortiguard.com/encyclopedia/ips/62703) is behind bot protection, so name, default action and package version are **not verified** |
+| **Check Point** (IPS) | **CPAI-2026-15802** "Node.js Brotli Remote Code Execution" (24 Oct, Critical), Security Gateway R75–R82; log "Web Server Enforcement Violation". It is the only Check Point protection for this CVE in the 2026 advisories archive | Update IPS, set to Prevent, install policy |
+| **Trend Micro** (TippingPoint) | Filter **48101** "HTTP: Google Brotli Decoder Out-of-Bounds Write Vulnerability" ([KA-0024830](https://success.trendmicro.com/en-US/solution/KA-0024830)) | KA also lists Vision One container / endpoint detections for Node.js child processes and outbound connections |
+| **Suricata ET Open** | **No rule** in the open ruleset (rules up to 27 Oct) | ET Pro not checked |
+| **Could not check** | Juniper IDP (Threat Labs moved to HPE, page unreachable), Sophos IPS (site blocks), SonicWall (security news list unusable), WatchGuard IPS (no advisory; signature lists not checked) | – |
+
+### WAF / CDN
+
+| Vendor | Coverage | Status / notes |
+|---|---|---|
+| **Cloudflare** (Managed Ruleset) | Emergency release 25 Oct ([changelog](https://developers.cloudflare.com/changelog/post/2026-10-25-emergency-waf-release/)): "Brotli - Request Content-Encoding - CVE:CVE-2026-111497" (…ca706f3c) and a Next.js rule for `/_next/image` (…402fe5bb) | Both "enabled by default with their action set to Log". **Set to Block yourself.** Blocking the Next.js rule "may prevent optimized images from loading" |
+| **Microsoft Azure WAF** | [Blog](https://techcommunity.microsoft.com/blog/azurenetworksecurityblog/protect-against-brotli-cve-2026-111497-with-azure-web-application-firewall-waf/4567288) (23 Oct): **DRS 2.2** on Application Gateway / Front Door Premium is "protected by default". Rule **920450** (PL1) treats `Content-Encoding` as a restricted header and blocks in Prevention mode. A **custom rule** (JSON in the blog) covers DRS 2.1 / CRS 3.2 and older, Front Door Standard and App Gateway for Containers | "Earlier rule set versions don't restrict this header." Detection mode does not block |
+| **Akamai** | [Status incident](https://www.akamaistatus.com/incidents/fy0lvwqxbdlr): platform investigation "investigating" since 23 Oct (last update 26 Oct 16:13 UTC); details only in the Akamai Community (login). The research blog returns 403 | App & API Protector coverage **not verified** |
+| **Imperva** | "Imperva has added WAF rules for CVE-2026-111497." ([blog](https://www.imperva.com/blog/node2shell-from-brotli-data-to-remote-code-execution/)) | No rule IDs published |
+| **Fastly** (Next-Gen WAF) | "Added virtual patch for CVE-2026-111497 (Node2Shell, HTTP2Shell)" ([changelog](https://www.fastly.com/documentation/reference/changes/), 26 Oct) | On 22 Oct Fastly also announced "Automatically enable CVE virtual patches" |
+| **F5** (Advanced WAF / ASM) | No F5-shipped signature. K000163902 gives a **custom attack signature** (rule text in the article) that blocks `Content-Encoding: br` on POST / PUT / PATCH, plus a `/_next/image` URL restriction | Self-built |
+| **Vercel** | WAF rules on disclosure day "that block the inbound attack vector for every project on Vercel" ([bulletin](https://vercel.com/kb/bulletin/node-js-security-advisory)) | "does not replace patching" |
+| **AWS WAF** | **Nothing found**: managed rule groups changelog (newest entry 22 Oct) and security bulletins | Use a custom rule on the `content-encoding` header if needed |
+| **OWASP CRS** | **Nothing found**: no release since v4.30.0 (2 Oct), no issue | Azure DRS 2.2 is CRS-based but adds the header itself |
+| **Not checked** | Google Cloud Armor, Barracuda WAF, NetScaler WAF, Radware | – |
+
+### Scanners and runtime detection
+
+| Vendor | Content |
+|---|---|
+| **Tenable** | 63 plugins ([list](https://www.tenable.com/cve/CVE-2026-111497/plugins)): e.g. 372406 / 372407 (Python Brotli / brotlicffi), 372462–372464 (.NET Core, SDK, ASP.NET Core OOB), plus distribution local checks |
+| **Qualys** | QID **389117** (Node.js on Windows / macOS) ([blog](https://blog.qualys.com/product-tech/2026/10/23/node-js-patches-brotli-remote-code-execution-flaw-find-vulnerable-runtimes-before-attackers-do)). The TotalAppSec check QID **533085** is intrusive: "This intrusive check may cause applications or APIs running on vulnerable Node.js versions to crash" |
+| **Trend Micro Vision One** | Container / endpoint detections for suspicious Node.js child processes and outbound connections (KA-0024830) |
 
 ## 3. Linux distributions and repositories
 

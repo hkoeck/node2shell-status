@@ -2,6 +2,19 @@
 
 Newest entry first.
 
+## Update 3 – 28 Oct 2026, 14:18 UTC
+
+Section 2 rebuilt as **"IPS / WAF protection"**: network IPS / NGFW, WAF / CDN, and scanners / runtime detection, plus a short note on what IPS / WAF can and cannot cover. Other sections were not re-checked.
+
+- **Palo Alto:** the advisory named Threat ID **97686** (content 9165+) as partial coverage on 26–27 Oct. The text was removed on 28 Oct 06:55 UTC, so there is no current Threat ID. The old text is taken from a Wayback snapshot of 27 Oct 21:07 UTC.
+- **Cisco / Talos:** no Snort rule in the Talos rule releases of 20, 21 and 27 Oct or in the Snort 3 community rules. The Cisco advisory names no SIDs.
+- **Fortinet:** IPS signature **62703**, per Threat Signal 6556 (26 Oct). The encyclopedia entry is behind bot protection, so its details are not verified.
+- **Azure WAF:** DRS 2.2 rule 920450 protects by default; a custom rule covers older rule sets.
+- **Akamai:** status-page incident "investigating"; WAF coverage not verified.
+- **Check Point:** CPAI-2026-15802 confirmed as its only protection for this CVE.
+- **Nothing found:** Suricata ET Open, AWS WAF managed rules, OWASP CRS.
+- **Could not check:** Juniper IDP, Sophos, SonicWall, WatchGuard signature lists, PAN Threat Vault.
+
 ## Update 2 – 28 Oct 2026, 10:30 UTC
 
 Coverage widened. The README went from about 1,800 to about 2,900 words, with the same structure as the PHP2Shell page. Details: [VERIFICATION.md](VERIFICATION.md#update-2-checks-28-oct-2026).
