@@ -2,7 +2,7 @@
 
 Newest entry first.
 
-## Update 2 – 28 Oct 2026, 10:21 UTC
+## Update 2 – 28 Oct 2026, 10:30 UTC
 
 Coverage widened. The README went from about 1,800 to about 2,900 words, with the same structure as the PHP2Shell page. Details: [VERIFICATION.md](VERIFICATION.md#update-2-checks-28-oct-2026).
 
@@ -27,7 +27,8 @@ Coverage widened. The README went from about 1,800 to about 2,900 words, with th
   - Tenable: has not independently confirmed the ELLIO activity.
   - Previdian honeypot hit, reported only by The Hacker News, marked not verified.
 - **Not verified, not used as fact:** a news report of a VMware SDDC Manager advisory for this CVE. Broadcom notification 38017, which search results linked to it, is an unrelated August advisory.
-- **Unchanged:** the 17 update-1 sources were re-read at 10:20 UTC and had no changes.
+- **Re-read, unchanged:** all 67 update-1 curl sources (10:20–10:29 UTC), Rocky Apollo, Sophos RSS, the SonicWall API and both F5 articles (10:29–10:30 UTC). Only wording changes, and changes in secondary sources (Rapid7, Help Net Security now mention KEV). The Juniper and Ivanti portal searches were not repeated.
+- **Control test for "nothing found" rows:** a vendor list only counts if it also shows that vendor's PHP2Shell item. Zscaler failed this test and moved to "could not check".
 
 ## Correction – 28 Oct 2026, 09:53 UTC
 

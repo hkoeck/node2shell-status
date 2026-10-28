@@ -3,7 +3,7 @@
 > [!WARNING]
 > **AI-generated content.** This document was researched and written by an AI assistant (Claude, Anthropic). Statements were checked against the raw text of the linked primary source (HTML/JSON/CSAF, not summaries) **except where marked as not verified**; provenance is logged in [VERIFICATION.md](VERIFICATION.md). It may still contain errors and goes stale quickly. **Always verify against the vendor source before acting.** No warranty.
 
-**Status:** 28 October 2026, 10:21 UTC (update 2). About 150 sources checked 09:36–10:21 UTC: vendor, distribution and CERT pages, feeds and APIs, and portal searches in a headless browser. All update-1 sources were re-downloaded at 10:20 UTC and had not changed. Could not check (bot protection, login, or the page did not render): Akamai, Broadcom / VMware portal, NetApp advisory list, Sophos advisory page (RSS read instead), Arista, Extreme, Infoblox, Forcepoint, Trellix, Netskope, Gigamon, Check Point support KB search. Per-source times: [VERIFICATION.md](VERIFICATION.md). Change history: [CHANGELOG.md](CHANGELOG.md).
+**Status:** 28 October 2026, 10:30 UTC (update 2). New in this update: 127 URLs fetched with curl (09:56–10:19 UTC), about 40 portal pages read in a browser (09:58–10:18 UTC), plus BSI / CERT-FR (10:21 UTC). Re-read 10:20–10:30 UTC: all 67 update-1 curl sources, the Rocky Apollo API, Sophos RSS, the SonicWall API and both F5 articles. Only wording or secondary-source changes were found. Not re-read in update 2: the Juniper and Ivanti portal searches (09:42–09:46 UTC). Could not check (bot protection, login, or the page did not render): Akamai, Broadcom / VMware portal, NetApp advisory list, Sophos advisory page (RSS read instead), Zscaler, Kaseya, Arista, Extreme, Infoblox, Forcepoint, Trellix, Netskope, Gigamon, the Check Point support KB search, community.citrix.com. Per-source times: [VERIFICATION.md](VERIFICATION.md). Change history: [CHANGELOG.md](CHANGELOG.md).
 
 ## Key facts
 
@@ -42,9 +42,9 @@
 | **HPE / Aruba** | [Critical vulnerability alert](https://support.hpe.com/hpesc/public/docDisplay?docId=sd00001284en_us&page=GUID-492AC266-D967-46CA-BD3A-75D57CBD0B32.html&docLocale=en_US) (27 Oct), no products named: "Should any vulnerable products be discovered, HPE security bulletins will be issued when fixes become available." |
 | **Trend Micro** | [KA-0024830](https://success.trendmicro.com/en-US/solution/KA-0024830) (upd. 27 Oct). Own products are under "urgent assessment"; "More information will be updated if any products are impacted". Protection: TippingPoint filter **48101** and Vision One detections (section 2). |
 | **Check Point** | No product statement found. IPS protection [CPAI-2026-15802](https://advisories.checkpoint.com/defense/advisories/public/2026/cpai-2026-15802.html) (24 Oct, Critical) for Security Gateway R82 / R81 / R80 / R77 / R75. The support KB search could not be checked. |
-| **Citrix / NetScaler** | Checked, nothing found. A support KB search for the CVE ID, "brotli" and "Node.js" returns no article that mentions the CVE. The newest security bulletin is still the PHP2Shell advisory (27 Oct). |
-| **Checked, nothing found** | **Sophos** (advisory RSS), **SonicWall** (PSIRT API, newest entry 14 Oct), **Juniper** (support portal search), **Ivanti** (hub search: only customer questions about EPMM / Sentry and vADC, no Ivanti answer), **WatchGuard** (PSIRT, newest 27 Oct), **Barracuda** (trust center), **Nutanix** (advisories, newest #0059 of 27 Oct), **Splunk** (advisories, newest 22 Oct), **A10** (advisories), **Siemens** (ProductCERT CSAF feed, newest 27 Oct), **Zscaler** (research blog). |
-| **Could not check** | Broadcom / VMware: the portal renders no list. A news report of an SDDC Manager advisory for this CVE is **not verified**. NetApp: the list did not render. Akamai: HTTP 403. Arista, Extreme, Infoblox, Forcepoint, Trellix, Netskope, Gigamon: bot protection, error pages or login. |
+| **Citrix / NetScaler** | Checked, nothing found in Citrix's support search. It searches the KB, security bulletins, community and blog together. Searches for the CVE ID, "brotli" and "Node.js" return no item that mentions the CVE. The newest security bulletin is still the PHP2Shell advisory (27 Oct). Citrix now also publishes CVE disclosures on community.citrix.com, which could not be read (Cloudflare challenge). |
+| **Checked, nothing found** | **Sophos** (advisory RSS), **SonicWall** (PSIRT API, newest entry 14 Oct), **Juniper** (support portal search only; it can miss reference advisories), **Ivanti** (hub search: only customer questions about EPMM / Sentry and vADC, no Ivanti answer), **WatchGuard** (PSIRT, newest 27 Oct), **Barracuda** (trust center), **Nutanix** (advisories, newest #0059 of 27 Oct), **Splunk** (advisories, newest 22 Oct), **A10** (advisories), **Siemens** (ProductCERT CSAF feed, newest 27 Oct), **SolarWinds** (advisories), **Oracle** (security alerts, newest 26 Oct), **Elastic** (security announcements, newest 6 Oct; one unanswered customer question about Elasticsearch, 24 Oct). |
+| **Could not check** | Broadcom / VMware: the portal renders no list. A news report of an SDDC Manager advisory for this CVE is **not verified**. NetApp: the list did not render. Akamai: HTTP 403. Zscaler: the trust portal returns 404, and the research blog list does not show its PHP2Shell post either, so it cannot be used. Kaseya: the page shell has no advisory list. Arista, Extreme, Infoblox, Forcepoint, Trellix, Netskope, Gigamon: bot protection, error pages or login. |
 
 ## 2. WAF, IPS and detection content
 
@@ -74,7 +74,7 @@
 | **Azure Linux 3.0** | [MSRC](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-111497): brotli fixed in `1.2.1-1`, nodejs in `24.22.1-1`. |
 | **Photon OS 5** | nodejs `24.19.0-5.ph5` "Fixed" ([CVE metadata](https://packages.vmware.com/photon/photon_cve_metadata/cve_data_photon5.0.json)). |
 | **Alpine 3.22** | `brotli-libs` `1.1.1-r0` (built 22 Oct). |
-| **CloudLinux / TuxCare** | [Blog](https://blog.cloudlinux.com/node-js-october-2026-security-releases) (last updated 22 Oct 16:54 UTC): `alt-nodejs` 12–26 and `ea-nodejs22` bundle their own Brotli. Fixed packages were released for all lines. Still pending at that time: alt-nodejs22 on CloudLinux 7 and the standard EA4 `ea-nodejs22`. Progress at that time: "31 of 33 CloudLinux builds and 76 of 99 TuxCare builds are released". |
+| **CloudLinux / TuxCare** | [Blog](https://blog.cloudlinux.com/node-js-october-2026-security-releases) (last updated 22 Oct 16:54 UTC): `alt-nodejs` 12–26 and `ea-nodejs22` bundle their own Brotli. As of 22 Oct 16:54 UTC, fixed packages were out for all lines except alt-nodejs22 on CloudLinux 7 and the standard EA4 `ea-nodejs22`: "31 of 33 CloudLinux builds and 76 of 99 TuxCare builds are released". |
 | **Remi repository** | Ships no Brotli library or Node.js. `php-brotli` 0.21.1-1 (25 Oct) builds against the system library: the spec has `%bcond_without libbrotli` and `BuildRequires: brotli-devel` and removes the bundled copy. The OS brotli update is the fix. |
 
 ## 4. Cloud platforms and container images
@@ -112,7 +112,7 @@
 
 ## Known gaps
 
-- **Could not check:** see the status line. Most important: Broadcom / VMware, NetApp and Akamai (all three published statements for PHP2Shell), and the Check Point KB.
+- **Could not check:** see the status line. Most important: Broadcom / VMware, NetApp, Akamai and Zscaler (all published statements for PHP2Shell), the Check Point KB and the Citrix community site.
 - **Still under investigation:** Cisco (interim, 99 products), Fortinet (47), F5 (all except NGINX), HPE, Trend Micro, Red Hat (RHSB "Ongoing").
 - **Affected, no fix yet:**
   - RHEL `nodejs:24` / `nodejs:26` and .NET 8
